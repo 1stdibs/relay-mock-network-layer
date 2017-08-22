@@ -5,7 +5,12 @@ This is useful for working in an environment like [storybook](https://github.com
 
 ## Usage
 ```js
-import {Environment, Network, RecordSource, Store} from 'relay-runtime';
+import {
+	Environment,
+	Network,
+	RecordSource,
+	Store
+} from 'relay-runtime';
 import getNetworkLayer from 'relay-mock-network-layer';
 import schema from './graphql.schema.json';
 
@@ -36,8 +41,7 @@ const network = Network.create(getNetworkLayer({
             city: 'New York',
             state: 'NY',
             zipCode: '10012',
-        }),
-        ...mocks
+        })
     }
 }));
 
