@@ -54,7 +54,7 @@ const environment = new Environment({network, store});
 ```
 
 ### Mocking custom scalar types
-If your schema has custom scalar types you'll need to use the `resolvers` option to ensure those types get mocked correctly. Pass this option a resolve function for each custom scalar.
+If your schema has custom scalar types you'll need to use the `resolvers` option to ensure those types get mocked correctly. Pass this option an object containing a resolve function for each custom scalar.
 
 ```js
 ...
