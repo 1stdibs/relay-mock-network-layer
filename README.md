@@ -52,3 +52,28 @@ const environment = new Environment({network, store});
 // use environment in <QueryRenderer>
 
 ```
+
+### Mocking custom scalar types
+If your schema has custom scalar types you'll need to use the `resolvers` option to ensure those types get mocked correctly. Pass this option a resolve function for each custom scalar.
+
+```js
+...
+import getNetworkLayer from 'relay-mock-network-layer';
+import {GraphQLScalarType} from 'graphql';
+
+...
+
+getNetworkLayer({
+    schema,
+    mocks: {...},
+    resolvers: {
+        CustomScalar: new GraphQLScalarType({
+            name: 'CustomScalar',
+            parseLiteral: () => {},
+            parseValue: () => {},
+            serialize: () => {}
+        }),
+        CustomScalar2: ...
+    }
+});
+```

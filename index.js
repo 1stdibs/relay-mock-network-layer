@@ -3,7 +3,7 @@
 const { makeExecutableSchema, addMockFunctionsToSchema } = require('graphql-tools');
 const { graphql, printSchema, buildClientSchema } = require('graphql');
 
-module.exports = function getNetworkLayer({schema, mocks}) {
+module.exports = function getNetworkLayer({schema, mocks, resolvers}) {
     return function fetchQuery(
         operation,
         variableValues
@@ -12,7 +12,7 @@ module.exports = function getNetworkLayer({schema, mocks}) {
             schema = printSchema(buildClientSchema(schema.data));
         }
 
-        const executableSchema = makeExecutableSchema({typeDefs: schema});
+        const executableSchema = makeExecutableSchema({typeDefs: schema, resolvers});
 
         // Add mocks, modifies schema in place
         addMockFunctionsToSchema({ schema: executableSchema, mocks });
