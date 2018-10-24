@@ -2,6 +2,7 @@
 
 const { makeExecutableSchema, addMockFunctionsToSchema } = require('graphql-tools');
 const { graphql, printSchema, buildClientSchema } = require('graphql');
+const RelayMockNetworkLayerError = require("./RelayMockNetworkLayerError");
 
 module.exports = function getNetworkLayer({schema, mocks, resolvers}) {
     return function fetchQuery(
@@ -19,16 +20,16 @@ module.exports = function getNetworkLayer({schema, mocks, resolvers}) {
 
         return graphql(executableSchema, operation.text, null, null, variableValues).then(
             // Trigger Relay error in case of GraphQL errors (or errors in mutation response)
-            // NOTICE that data might contain values even when errors are present
             // See https://github.com/facebook/relay/issues/1816
-            
+
             result => {
                 if (result.errors && result.errors.length > 0) {
-                    return Promise.reject(result);
+                    return Promise.reject(new RelayMockNetworkLayerError(result.errors));
                 }
                 return Promise.resolve(result);
             }
         );
     }
 };
+
 
