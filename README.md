@@ -42,7 +42,13 @@ const network = Network.create(getNetworkLayer({
             state: 'NY',
             zipCode: '10012',
         })
-    }
+    },
+
+    // See https://www.apollographql.com/docs/graphql-tools/mocking.html#Mocking-interfaces
+    preserveResolvers: false,
+
+    // Forward along other options to `makeExecutableSchema`.
+    ...schemaDefinitionOptions
 }));
 
 // Create an environment using this network:
