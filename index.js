@@ -2,18 +2,15 @@
 
 const { makeExecutableSchema, addMockFunctionsToSchema } = require('graphql-tools');
 const { graphql, printSchema, buildClientSchema } = require('graphql');
-const RelayMockNetworkLayerError = require("./RelayMockNetworkLayerError");
+const RelayMockNetworkLayerError = require('./RelayMockNetworkLayerError');
 
-module.exports = function getNetworkLayer({schema, mocks, resolvers}) {
-    return function fetchQuery(
-        operation,
-        variableValues
-    ) {
+module.exports = function getNetworkLayer({ schema, mocks, resolvers }) {
+    return function fetchQuery(operation, variableValues) {
         if (typeof schema === 'object' && schema.data) {
             schema = printSchema(buildClientSchema(schema.data));
         }
 
-        const executableSchema = makeExecutableSchema({typeDefs: schema, resolvers});
+        const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
 
         // Add mocks, modifies schema in place
         addMockFunctionsToSchema({ schema: executableSchema, mocks });
@@ -29,7 +26,5 @@ module.exports = function getNetworkLayer({schema, mocks, resolvers}) {
                 return Promise.resolve(result);
             }
         );
-    }
+    };
 };
-
-
