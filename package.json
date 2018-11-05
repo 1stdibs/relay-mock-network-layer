@@ -1,6 +1,6 @@
 {
   "name": "relay-mock-network-layer",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "Relay modern network layer that returns schema correct mock data",
   "main": "index.js",
   "repository": "git@github.com:1stdibs/relay-mock-network-layer.git",
