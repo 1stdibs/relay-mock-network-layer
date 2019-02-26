@@ -1,8 +1,8 @@
 'use strict';
 
-const { makeExecutableSchema, addMockFunctionsToSchema } = require('graphql-tools');
-const { graphql, printSchema, buildClientSchema } = require('graphql');
-const RelayMockNetworkLayerError = require('./RelayMockNetworkLayerError');
+import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
+import { graphql, printSchema, buildClientSchema } from 'graphql';
+import RelayMockNetworkLayerError from './RelayMockNetworkLayerError';
 
 const defaultSchemaDefinitionOptions = {
     resolverValidationOptions: {
@@ -19,7 +19,7 @@ const defaultSchemaDefinitionOptions = {
  * @param {Object} networkConfig.resolvers - Default resolvers for a schema.
  * @param {Function} [networkConfig.resolveQueryFromOperation] - If relay operation query text does not exist, used to resolve the query from the operation. Useful for persisted query support.
  */
-module.exports = function getNetworkLayer({
+export default function getNetworkLayer({
     schema,
     mocks,
     resolvers,

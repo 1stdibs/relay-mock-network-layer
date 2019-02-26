@@ -1,4 +1,4 @@
-class RelayMockNetworkLayerError extends Error {
+export default class RelayMockNetworkLayerError extends Error {
     constructor(errors) {
         const distinctMessages = errors
             .map(e => e.message)
@@ -10,5 +10,3 @@ class RelayMockNetworkLayerError extends Error {
         }
     }
 }
-
-module.exports = RelayMockNetworkLayerError;
