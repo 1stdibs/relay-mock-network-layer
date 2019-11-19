@@ -39,20 +39,20 @@ export default function getNetworkLayer({
         ...schemaDefinitionOptions,
     };
 
+    if (typeof schema === 'object' && schema.data) {
+        schema = printSchema(buildClientSchema(schema.data));
+    }
+
+    const executableSchema = makeExecutableSchema({
+        typeDefs: schema,
+        resolvers,
+        ...schemaDefinitionOptions,
+    });
+
+    // Add mocks, modifies schema in place
+    addMockFunctionsToSchema({ schema: executableSchema, mocks, preserveResolvers });
+
     return function fetchQuery(operation, variableValues) {
-        if (typeof schema === 'object' && schema.data) {
-            schema = printSchema(buildClientSchema(schema.data));
-        }
-
-        const executableSchema = makeExecutableSchema({
-            typeDefs: schema,
-            resolvers,
-            ...schemaDefinitionOptions,
-        });
-
-        // Add mocks, modifies schema in place
-        addMockFunctionsToSchema({ schema: executableSchema, mocks, preserveResolvers });
-
         const query =
             (resolveQueryFromOperation && resolveQueryFromOperation(operation)) || operation.text;
 
