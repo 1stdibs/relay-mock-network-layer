@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0] - 2019-02-26
+
+### Added
+
+-   Performance optimzation: only create executable schema when `getNetworkLayer` is called
+
 ## [2.1.0] - 2019-02-26
 
 ### Added
