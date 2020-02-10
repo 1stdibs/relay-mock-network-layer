@@ -1,4 +1,4 @@
-import babel from 'rollup-plugin-babel';
+import typescript from 'rollup-plugin-typescript2';
 
 import pkg from './package.json';
 
@@ -6,11 +6,11 @@ const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDepen
 
 export default [
     {
-        input: 'index.js',
+        input: 'src/index.ts',
         external,
         plugins: [
-            babel({
-                exclude: ['node_modules/**'],
+            typescript({
+                tsconfig: 'tsconfig.package.json',
             }),
         ],
         output: [

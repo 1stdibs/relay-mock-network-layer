@@ -1,5 +1,9 @@
+import { GraphQLError } from 'graphql';
+
 export default class RelayMockNetworkLayerError extends Error {
-    constructor(errors) {
+    public originalErrors: readonly GraphQLError[];
+
+    constructor(errors: readonly GraphQLError[]) {
         const distinctMessages = errors
             .map(e => e.message)
             .filter((value, index, messages) => messages.indexOf(value) === index);
