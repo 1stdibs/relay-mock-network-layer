@@ -1,6 +1,10 @@
-'use strict';
-
-import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
+import {
+    makeExecutableSchema,
+    addMockFunctionsToSchema,
+    IExecutableSchemaDefinition,
+    IMocks,
+} from 'graphql-tools';
+import { FetchFunction, RequestParameters } from 'relay-runtime';
 import { graphql, printSchema, buildClientSchema } from 'graphql';
 import RelayMockNetworkLayerError from './RelayMockNetworkLayerError';
 
@@ -11,6 +15,13 @@ const defaultSchemaDefinitionOptions = {
         requireResolversForResolveType: false,
     },
 };
+
+interface Config extends Omit<IExecutableSchemaDefinition, 'typeDefs'> {
+    schema: { data: any } | string;
+    mocks?: IMocks;
+    resolveQueryFromOperation?: (operation: RequestParameters) => string;
+    preserveResolvers?: boolean;
+}
 
 /**
  * @param {Object} networkConfig - The configuration for the mock network layer.
@@ -33,7 +44,7 @@ export default function getNetworkLayer({
      * @type IExecutableSchemaDefinition
      */
     ...schemaDefinitionOptions
-}) {
+}: Config): FetchFunction {
     schemaDefinitionOptions = {
         ...defaultSchemaDefinitionOptions,
         ...schemaDefinitionOptions,
@@ -44,6 +55,7 @@ export default function getNetworkLayer({
     }
 
     const executableSchema = makeExecutableSchema({
+        // @ts-ignore
         typeDefs: schema,
         resolvers,
         ...schemaDefinitionOptions,
@@ -52,9 +64,8 @@ export default function getNetworkLayer({
     // Add mocks, modifies schema in place
     addMockFunctionsToSchema({ schema: executableSchema, mocks, preserveResolvers });
 
-    return function fetchQuery(operation, variableValues) {
-        const query =
-            (resolveQueryFromOperation && resolveQueryFromOperation(operation)) || operation.text;
+    return async function fetchQuery(request, variables) {
+        const query = resolveQueryFromOperation?.(request) || request.text;
 
         if (!query) {
             throw new Error(
@@ -62,16 +73,15 @@ export default function getNetworkLayer({
             );
         }
 
-        return graphql(executableSchema, query, null, null, variableValues).then(
-            // Trigger Relay error in case of GraphQL errors (or errors in mutation response)
-            // See https://github.com/facebook/relay/issues/1816
 
-            result => {
-                if (result.errors && result.errors.length > 0) {
-                    return Promise.reject(new RelayMockNetworkLayerError(result.errors));
-                }
-                return Promise.resolve(result);
-            }
-        );
+        const {errors, data} = await graphql(executableSchema, query, null, null, variables);
+
+        // Trigger Relay error in case of GraphQL errors (or errors in mutation response)
+        // See https://github.com/facebook/relay/issues/1816
+        if (errors && errors.length > 0) {
+            throw new RelayMockNetworkLayerError(errors);
+        }
+
+        return {data}
     };
 }
