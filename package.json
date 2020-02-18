@@ -1,6 +1,6 @@
 {
   "name": "relay-mock-network-layer",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "Relay modern network layer that returns schema correct mock data",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
