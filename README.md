@@ -1,4 +1,9 @@
+## Deprecation notice
+
+This functionality is now officially supported in Relay using the [`relay-test-utils`](https://relay.dev/docs/en/testing-relay-components) package maintained by the Relay team. It is recommended to use that instead of this package.
+
 # relay-mock-network-layer
+
 Provides a network layer for relay modern that returns schema-correct mock data using `addMockFunctionsToSchema` from [`graphql-tools`](http://dev.apollodata.com/tools/graphql-tools/mocking.html#Default-mock-example);
 
 This is useful for working in an environment like [storybook](https://github.com/storybooks/storybook) where you want to work on your components without hitting a live GraphQL server.
