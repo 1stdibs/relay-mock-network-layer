@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.0]
+
+-   Convert to typescript
+
 ## [2.3.0] - 2019-02-26
 
 ### Added
